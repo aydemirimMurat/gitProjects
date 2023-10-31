@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ilk web sayfam</title>
+</head>
+<body>
+    Buraya doğrudan bu şekilde de yazi yazabilirsiniz.
+    <!-- Web sayfanizda göstermek istediğiniz herşeyi body section a girmelisiniz. -->
+
+
+    <!-- Heading/title için <h1> den <h6> ya kadar farkli büyüklüklerde başliklar kullanabilirsiniz. -->
+    <!-- <h1>işlem yapilmasini istediklerinizi iki tag arasina yaziniz. </h1> -->
+    <!-- h1 ve h2 ikiyi yan yana da yazsak sayfada görünümü değişmez. başlığı yazar ve satır başı yaparak sonrakine devam eder.  -->
+
+    <h1>başlik 1</h1>
+    <h2>başlik 2</h2>
+    <h3>başlik 3</h3>
+    <h4>başlik 4</h4>
+    <h5>başlik 5</h5>
+    <h6>başlik 6</h6>
+    
+
+    <!-- <p>: paragraf için kullanilir. -->
+    <p> Burasi bir paragraf elementidir. </p>
+    <p> Bu da paragraf elementi için başka bir örnek </p>
+   <!-- Note: HTML is Not Case Sensitive. HTML tags are not case sensitive: <P> means the same as <p>.  -->
+    
+    <!-- <br>: break: bir satir alta geçer -->
+    <p> Bu paragrafi br tag ine örnek vermek için yaziyoruz. <br> br tag i bir satir alta geçmek 
+        için kullanilir. <br> Bundan dolayi br tag i kapaniş tag ine ihtiyaç duymaz.</p>
+    
+    
+    <!-- <hr>: horizantal row: yatay bir çizgi çeker. Web Sayfanizdaki bölümler arasina çizgi çekebilirsiniz-->
+    <hr>
+
+
+    <!-- Formatting için kullanişli bazi HTML elementleri: -->
+    <!-- <b>: ifadeyi kalin harflerle yazar-->
+    <!-- <strong>: ifadeyi kalin harflerle yazar, ve ifade daha vurgulu olur -->
+    <!-- <bdo>: yazinin yönünü değiştiri, tersten yazar. -->
+    <!-- <code>: Web sayfanizda göstereceğiniz kodlar bu tag in içine yazilabilir. -->
+    <!-- <i>: yaziyi italik olarak yazar -->
+    <!-- <em>: yaziyi italik olarak yazar, ve ifade daha emphasize vurgulu olur.-->
+    <!-- <small>: yaziyi daha küçük yazar-->
+    <!-- <u>: underline: ifadenin altini çizer-->
+    <!-- <mark>: ifadeyi highlight eder -->
+	<!-- <var>: variable: variable tanimlar-->
+   
+ 
+        
+    <p> 
+        Bu paragrafi formattting e örnek olarak yazdik. bazilari <i>italik</i> <em> italik  ve vurgulu </em> <u>alti cizili</u> <b>kalin</b> <strong>daha kalin</strong>  <mark> highlighted</mark> olarak yazabiliriz.
+    </p>
+
+
+    <p> <bdo dir="rtl">ey edip adanada pide ye yada kebap</bdo>  </p> 
+    	
+
+    <!-- İç içe birden fazla tag kullanilabilir. -->
+    <p>
+        Tag leri amacina göre <b><i><u> iç </u>içe</i> birden fazla </b> kullanabiliriz.
+    </p>
+    
+    
+    <p>Aşağida basit bir APEX kod örneği bulunmaktadir:</p>
+    <code> System.debug('Merhaba'); </code>
+
+
+<!-- right to left rtl  -->
+    <p>
+        <bdo dir="rtl"> 
+            Buraya yazacağiniz yazi, sağdan sola doğru gösterilir.             
+        </bdo>
+    </p>
+
+
+    <p>
+        Small etiketi yaziyi <small>daha <small>küçük</small> </small> gösterir. <br>
+        var etiketi de <var>variableName</var> tanimlamak için kullanilir <br>
+        Yazilarda bazi yerleri <mark>highlight</mark> etmek isteyebilirsiniz
+    </p>
+
+
+    <!-- <template>: Arasina yazilan ifadeyi template olarak tutar. Websayfasinda göstermez.
+        Tekrar tekrar kullanmak isteyeceğiniz HTML içeriğini bu tag içinde yazabilirsiniz.
+        Buradaki içerik daha sonra JavaScript vasitasiyla kullanilabilir. -->
+    <template>
+        <p>
+            Bu içerik template olarak tutulur. Websayfasinda gösterilmez. isterseniz web sayfasına bakınız.
+        </p>
+    </template>
+
+
+<!-- cite örneği -->
+    <p>
+         I love programming and my favorite quote about programming is:
+        <cite>
+            "Any fool can write code that a computer can understand.
+            Good programmers write code that humans can understand."
+        </cite>
+	</p>
+
+
+    <!-- <div>: HTML içeriğini section lara ayirir. İlişkili element lerin bir arada tutulmasi için kullanişlidir. Bu bölme için özel işlemler yapmamızı sağlar. -->
+    <div>İlk div elementi </div>
+
+    <div>İkinci div elementi</div>
+
+
+
+
+    <h2>HTML de List:</h2>
+    <h3>1) <u>Ordered</u> List: ol</h3>
+    <p>
+        ol element: Bu listeye eklenen elemanlar sirali halde tutulur. Default olarak numaralandirilarak tutulur.
+        <br>
+        li element: list item: Listeler içerisine eleman eklemek için kullanilir.
+    </p>
+    
+    <h4>Sirasiyla alinmasi gereken Salesforce sertifikalar:</h4>
+
+    <!-- type: bu bir attribute tur. siralamanin çeşidini burada belirleyebilirsiniz.
+    type attribute u olmadan da ol tag ini kullanabilirsiniz.-->
+    <ol>
+        <li>Salesforce Administrator</li>
+        <li>Salesforce <b>Advanced</b> Administrator</li>
+        <li>Salesforce Developer I</li>
+        <li>Salesforce App Builder</li>
+    </ol>
+
+    <ol type="a">
+        <li>Salesforce Administrator</li>
+        <li>Salesforce <b>Advanced</b> Administrator</li>
+        <li>Salesforce Developer I</li>
+        <li>Salesforce App Builder</li>
+    </ol>
+
+
+    <h3>2) <mark>Unordered</mark> List: ul</h3>
+    <p>ul element: eleman sirasi bu listede önemli değildir. <br>
+    </p>
+    <h4>Siranin önemli olmadiği <b><u>Alişveriş Listesi:</u></b></h4>
+    <ul>
+        <li>elma</li>
+        <li>armut</li>
+        <li><b>portakal</b></li>
+        <li>süt</li>
+        <li>yumurta</li>
+    </ul>
+
+    <p> type attribute u ile eleman larin başina koyulacak olan işaretler belirlenebilir. Type attribute u kullanilmazsa default olarak içi dolu daire olur. </p> 
+
+    <ul type="square">
+        <li>elma</li>
+        <li>armut</li>
+        <li><b>portakal</b></li>
+        <li>süt</li>
+        <li>yumurta</li>
+    </ul>
+
+
+    
+</body>
+</html>
