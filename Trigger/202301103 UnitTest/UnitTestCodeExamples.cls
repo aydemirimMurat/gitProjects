@@ -5,7 +5,7 @@ public class TemperatureConverter {
         return cs.setScale(2);
     }
 }
-
+   
 @isTest
 private class TemperatureConverterTest {
     @isTest static void testWarmTemp() {
