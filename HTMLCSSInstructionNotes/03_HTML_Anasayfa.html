@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anasayfa</title>
+	<link rel="icon" href="wisequarter-logo.png"> 
+    <!-- favicon olarak adlandirilir.-->>
+<!-- 7. Bütün sayfada etkili olacak style işlemi için head sectionda işlem yapılır.
+head < body < div < inline
+eterior <internal < inline
+-->
+        <!-- bütün başlıklar için -->
+    <style>
+        p{
+            background-color: rgb(255, 255, 0);
+        }
+        div{
+            background-color: cadetblue;
+        }
+
+        h1{
+            color: brown;
+        }
+        h2{
+            color: rgb(200, 20, 20);
+        }
+        #idHyperlinks{
+            background-color: aqua;
+        }
+    </style>
+</head>
+
+<body style="background-color: burlywood;">
+    <img src="wq2.png" alt="Resim olur da gösterilemezse, bu yazi görünür." width="10%">
+
+<!-- 1. HTML Links: -->
+    <h1 style="color: blueviolet;">HTML Links:</h1>
+    <p>
+        a elementi ile sayfamiza link koyabiliriz. <br>
+        <b>href:</b> a elementinde attribute olarak kullanilir. <br>
+        Burada linki verilecek olan webpage in URL i yazilir. <br>
+        <b>target:</b> Linkin nasil açilacağini belirler. Değerleri aşağidaki gibidir:
+        <ul>
+            <li>_self: (same page)</li>
+            <li>_blank: (yeni sayfada açar)</li>
+            <li>_parent: (parent frame de açar)</li>
+            <li>-top: (open documents in the full body of the window</li>
+        </ul>
+    </p>
+
+    <h2 id="idHyperlinks">Hyperlinks:</h2>
+<!-- 5.1 id ekle nilmesi gerekir. -->
+    <a href="https://wisequarter.com/">  Wise Quarter i bu sayfada aç </a> <br>
+    <a href="https://wisequarter.com/" target="_blank">Wise Quarter yeni sayfada aç</a> <br>
+    <a href="https://wisequarter.com/" target="_parent">Wise Quarter parent frame</a> <br>
+    <a href="https://wisequarter.com/" target="_top">Wise Quarter full body</a> <br>
+
+<!-- 4. Image in HTML: -->
+    <h2>Image in HTML:</h2>
+    <ul>
+        <li>HTML dokümanina resim eklemek için img elementini kullanabilirsiniz. <br>
+        closing tag i yoktur.</li>
+        <li><b>src:</b> resmin adresini belirtir </li>
+        <li><b>alt:</b> resim için alternative text buraya yazilir. <br>
+        resim açilmadiğinda buraya yazacağiniz yazi görünür. </li>
+        <li><b>width:</b> resmin genişliğini belirtir </li>
+        <li><b>height:</b> resmin yüksekliğini belirtir </li>
+    </ul>
+    <img src="wisequarter-logo.png" alt="Resim görünmez ise bu yazi gözükür." width="150" height="67"><br>
+    <img src="wisequarter-logo.png" alt="Resim yazisi." width="300" height="134"><br>
+    <img src="wisequarter-logo.png" alt="Resim yazisi." width="30%"><br>
+<!-- 4a. Image with link in HTML: -->    
+    <a href="https://wisequarter.com/" target="_blank">
+        <img src="wisequarter-logo.png" alt="Resim ise bu yazi gözükür." width="10%">
+    </a>
+
+
+<!-- 3. HTML Favicons: -->
+    <h3>HTML Favicons:</h3>
+    <!-- <link rel="icon" href="wisequarter-logo.png"> -->
+    <p>300
+        sayfa başliğinin yaninda görünen küçük resimlere denir. icon da denilebilir. <br>
+        head section inda link elementiyle kullanilir. aşağıdaki kodu inceleyiniz. <br>
+    
+        <code>link rel="icon" href="wisequarter-logo.png"</code>
+    </p>
+
+
+    <div style="background-color: blueviolet;">
+<!-- 2. Attributes -->
+    <h2>Attributes:</h2>
+    <p>Bir element birden fazla attribute kullanabilir. Attribute lar arasinda boşluk birakarak <br>
+    ya da noktali virgül koyarak kullanabilirsiniz. <br>
+    Attribute ler name="Value" şeklinde kullanilir </p>
+    </div>
+
+
+
+    <div style="background-color: chartreuse;">
+<!-- 5 Başlıklara hızlıca ulaşmak için unique olan bir bilgi ile ulaşılabilir. Bunun için id attribute eklenir. -->
+    <h3>id Attribute:</h3>
+    <ul>
+        <li>HTML element leri için unique id oluşturmaya yarar.</li>
+        <li>id attribute un değeri, o html dokümani içerisinde unique olmali</li>
+        <li>CSS ve JavaScript, belirli bir elementle ilgili (style/select) yapmak için id leri kullanir.</li>
+        <li>CSS ile belirli bir elemente <b>"#ElementId"</b>  ile ulaşilabilir.</li>
+        <li>JavaScript: JavaScript: belirli bir elemente <b>getElemntById()</b>  ile ulaşir.</li>
+        <li>Id değerleri case sensitive dir.</li>
+    </ul>
+    <!-- #: hash    AltGr 3 -->
+    <p>Hyperlinks lere ulaşmak için <a href="#idHyperlinks"> tiklayiniz </a>.  </p>
+    </div>
+
+
+<!-- 6 Her bir satıra backgroun color veya benzeri style ekelenebilir. Ancak ben bölümler halinde işlem yaparak kolaylaştırmak istiyorum. div ler ile bunu sağlayabiliriz. -->
+
+<!-- <li style="background-color: aqua;">HTML element leri için unique id oluşturmaya yarar.</li>
+<li style="background-color: rgb(68, 0, 255);">id attribute un değeri, o html dokümani içerisinde unique olmali</li> -->
+
+<!-- 6 Class Attribute: -->
+    <div>
+    <h3>Class Attribute:</h3>
+    <p>
+        Element ler için class (container) belirler. <br>
+        CSS ve JavaScript ten, class Attribute u kullanarak belirli bir class name e sahip element lere ulaşmak ve işlem yapmak için kullanilir. <br>
+    </p>
+    <ul>
+        <li>Bir element için birden fazla class belirlenebilir.</li>
+        <!-- Hem kanarya sevenler derneğine hem de kanarya seven kediler derneğine de üye olabilir :) -->
+        <li>Class attribute u <b>global attribute</b>  tur. Yani herhangi bir element veya tüm elementler ile kullanilabilir.</li>
+        <li>Farkli elementler ayni class attribute una sahip olabilir.</li>
+        <li>CSS ve JavaScript bu class attribute larini kullanarak belirli elementlere ulaşabilir.</li>
+        <li>CSS ten belirli bir class name e <b>".ClassName"</b>  ile ulaşilabilir.</li>        
+        <li>JavaScript, belirli class name e sahip elementlere <b> getElementByClassName()</b> ile ulaşabilir.</li>
+        <li>class değerleri case sensitive dir.</li>
+
+    </ul>
+    </div>
+
+</body>
+
+</html>
