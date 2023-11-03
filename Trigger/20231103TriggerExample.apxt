@@ -1,0 +1,27 @@
+trigger AccountTrigger on Account(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  
+    CalloutClass.makeCallout();
+    }
+    WHEN BEFORE_UPDATE{  
+    AccountTriggerHandler.AddRelatedRecord(Trigger.New);
+    CalloutClass.makeCallout();
+    }
+    WHEN BEFORE_DELETE{  
+    }
+    WHEN AFTER_INSERT {  
+    AccountTriggerHandler.AddRelatedRecord(Trigger.New);
+    }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+
+
