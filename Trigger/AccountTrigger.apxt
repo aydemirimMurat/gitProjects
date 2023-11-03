@@ -1,0 +1,8 @@
+trigger AccountTrigger on Account (before insert, before update) {
+    if(trigger.isBefore && trigger.isInsert){
+        for(Account acc: Trigger.new){
+            acc.rating='Hot';
+            acc.description='Benim rating im '+ acc.rating;
+        }
+    }
+}
