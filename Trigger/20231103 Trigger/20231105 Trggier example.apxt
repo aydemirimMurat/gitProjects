@@ -1,0 +1,879 @@
+20231105 Trggier example
+//EXAMPLE1
+////AccountTrigger Class
+trigger AccountTrigger on Account(before insert) {	
+	for(Account acc: Trigger.new) {
+	  acc.Rating ='Hot';
+      acc.Description ='benim ratingim '+ acc.Rating;
+		
+ System.debug(acc);
+ System.debug(Trigger.operationType); //BEFORE_INSERT
+ System.debug(Trigger.isBefore);  // true
+ System.debug(Trigger.isInsert); // true
+ System.debug(Trigger.isAfter); // false
+	}
+}
+
+////Anonymous Windows
+Account acc = new Account();
+Acc.name = 'New Name'
+
+Database.insert(acc);
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+//EXAMPLE2
+////AccountTrigger Class
+trigger AccountTrigger on Account(before insert) {
+    for(Account acc: Trigger.new) {
+	  acc.Rating ='Hot';
+      acc.Description ='benim ratingim '+ acc.Rating;
+    }
+}
+
+
+////Anonymous Windows
+list<Account> myAccList= new List<Account>();
+
+for(integer i=0; i<200; i++){
+   account myAcc=new Account();
+    myAcc.name= 'newAccount'+i;
+    myAccList.add(myAcc);
+}
+Database.insert(myAccList);
+////Anonymous Windows
+List<Account> myList = [Select id FROM Account WHERE name LIKE : 'newAcc%'];
+Database.delete(myList); 
+
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+//EXAMPLE3
+trigger AccountTrigger on Account(before insert,after insert) {
+    
+	system.debug('Kac tane hesap oluşacak');
+}
+////Anonymous Windows
+Account acc = new Account();
+Acc.name = 'NewName'
+
+Database.insert(acc);
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+//EXAMPLE4
+trigger AccountTrigger on Account (before insert, after insert) {
+    if(Trigger.isBefore && Trigger.isInsert){
+        for(Account acc: Trigger.new){
+            acc.Rating= 'Hot';
+            acc.Description= 'benim ratingim '+ acc.Rating;
+        }
+	//before insert, update, delete olduğu için DML operation yazılmasına gerek yoktur. 
+    }
+    if(Trigger.isAfter && Trigger.isInsert){
+        list<Contact> yeniContacts = new List<Contact>();
+        for(Account acc: Trigger.new){
+            contact cnt = new contact();
+            cnt.FirstName='Contact of '+ acc.name;
+            cnt.LastName= 'Last Name '+ acc.name;
+            system.debug(cnt.AccountId);
+            system.debug(acc.Id);
+            cnt.AccountId=acc.Id;
+            yeniContacts.add(cnt);
+            system.debug(cnt.AccountId);
+            system.debug(acc.Id);
+        }
+        insert yeniContacts;
+		// after olduğu için DML insert, update, delete eklenmelidir.
+    }
+}
+///EAW
+account acc= new account();
+acc.name='DENEMEEE6';
+database.insert(acc);
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+//EXAMPLE5
+trigger AccountTrigger on Account (before insert, before update){
+    list<Account> newAccounts = new List<Account>();
+    for(Account acc:Trigger.new){
+        if(acc.industry==null){
+			acc.Industry='Banking';
+            newAccounts.add(acc);
+            //before insert, update, delete olduğu için DML operation yazılmasına gerek yoktur. 
+        }
+    }
+    list<Account> newAccounts2 = new List<Account>();
+    for(Account acc:Trigger.new){
+        acc.Description='Benim endustürim ' + acc.Industry;
+        newAccounts2.add(acc);
+    }
+}
+
+
+///EAW
+account acc= new account();
+acc.name='DENEMEEE6';
+database.insert(acc);
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+//EXAMPLE5
+trigger AccountTrigger on Account(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  
+    List<Account> newAccounts= new List<Account>();
+        for(Account acc: Trigger.new){
+            if(acc.Industry== null){//acc.Industry== null yerine kullanılabilir.
+                acc.Industry='Banking';
+                acc.Description='Benim endustürim ' + acc.Industry;     
+                newAccounts.add(acc);
+            }
+        }
+    }
+    WHEN BEFORE_UPDATE{  
+    List<Account> newAccounts2= new List<Account>();
+        for(Account acc: Trigger.new){
+            if(!String.isBlank(acc.Industry)){//acc.Industry== null yerine kullanılabilir.
+                acc.Industry='Education';
+                acc.Description='Benim endustürim ' + acc.Industry;
+                newAccounts2.add(acc);
+            }
+        }    
+    }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  
+    List<Contact> yeniContacts = new List<Contact>();
+        for(Account acc: Trigger.new){
+            contact cnt= new Contact();
+            cnt.FirstName= 'Contact of ' + acc.Name;
+            cnt.LastName= 'Contact of ' + acc.Name;        
+            cnt.AccountId=acc.id;
+            yeniContacts.add(cnt);
+        }
+        insert yeniContacts;
+    }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+//EXAMPLE6
+1. Before creating an Account, if the industry filed is null assign ‘Banking’ to Industry field  
+	2. After creating an Account, create a contact of Account 
+	3. Before updating an Account, assign ‘Education’ to Industry field.
+	4.Before deleting an account write ‘… company is deleted’ on the console
+
+
+    	AccountTriggerHandler.beforeInsertHandler(Trigger.new);
+
+
+
+
+
+    public static void beforeInsertHandler(List<Account> accList){
+        List<Account> newAccounts= new List<Account>();
+        for(Account acc: accList){
+            if(acc.Industry== null){//acc.Industry== null yerine kullanılabilir.
+                acc.Industry='Banking';
+                acc.Description='Benim endustürim ' + acc.Industry;     
+                newAccounts.add(acc);
+            }
+        }
+    }
+    pubic static void beforeUpdateHandler(list<Account> accList){
+        List<Account> newAccounts2= new List<Account>();
+        for(Account acc: accList){
+            if(!String.isBlank(acc.Industry)){//acc.Industry== null yerine kullanılabilir.
+                acc.Industry='Education';
+                acc.Description='Benim endustürim ' + acc.Industry;
+                newAccounts2.add(acc);
+            }
+        }
+    }
+    public static void afterInsertHandler(list<Account> accList){
+        List<Contact> yeniContacts = new List<Contact>();
+        for(Account acc: accList){
+            contact cnt= new Contact();
+            cnt.FirstName= 'Contact of ' + acc.Name;
+            cnt.LastName= 'Contact of ' + acc.Name;        
+            cnt.AccountId=acc.id;
+            yeniContacts.add(cnt);
+        }
+        insert yeniContacts;
+    }
+///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+//EXAMPLE7
+trigger AccountTrigger on Account(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  
+		AccountTriggerHandler.beforeInsertHandler(Trigger.new);
+    }
+    WHEN BEFORE_UPDATE{  
+		AccountTriggerHandler.beforeUpdateHandler(Trigger.new);
+    }
+    WHEN BEFORE_DELETE{  
+		AccountTriggerHandler.beforeDeleteHandler(Trigger.old);
+    }
+    WHEN AFTER_INSERT {  
+		AccountTriggerHandler.afterInsertHandler(Trigger.new);
+    }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+
+///////////	
+
+public class AccountTriggerHandler {
+    public static void beforeInsertHandler(List<Account> accList){
+        List<Account> newAccounts= new List<Account>();
+        for(Account acc: accList){
+            if(acc.Industry== null){//acc.Industry== null yerine kullanılabilir.
+                acc.Industry='Banking';
+                acc.Description='Benim endustürim ' + acc.Industry;     
+                newAccounts.add(acc);
+            }
+        }
+    }
+    public static void beforeUpdateHandler(list<Account> accList){
+        List<Account> newAccounts2= new List<Account>();
+        for(Account acc: accList){
+            if(!String.isBlank(acc.Industry)){//acc.Industry== null yerine kullanılabilir.
+                acc.Industry='Education';
+                acc.Description='Benim endustürim ' + acc.Industry;
+                newAccounts2.add(acc);
+            }
+        }
+    }
+    public static void afterInsertHandler(list<Account> accList){
+        List<Contact> yeniContacts = new List<Contact>();
+        for(Account acc: accList){
+            contact cnt= new Contact();
+            cnt.FirstName= 'Contact of ' + acc.Name;
+            cnt.LastName= 'Contact of ' + acc.Name;        
+            cnt.AccountId=acc.id;
+            yeniContacts.add(cnt);
+        }
+        insert yeniContacts;
+    }
+    Public static void beforeDeleteHandler(List<Account> accList){
+		List<Account> newAccounts3= new List<Account>();   
+		for(Account acc: accList){
+			System.debug(acc.name +' company is deleted');
+        }
+ }
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//EXAMPLE8
+if phone number is being updated,write the old phone number to the OldPhone field.(firstly; create’Old Phone’ field on Account.
+
+///////////////////////////////
+trigger AccountTrigger on Account(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  }
+    WHEN BEFORE_UPDATE{  
+    AccountTriggerHandler.oldPhoneRecord(Trigger.new, Trigger.oldMap);
+    }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+	
+///////////////////////////////////
+public class AccountTriggerHandler {
+    public static void oldPhoneRecord(List<Account> accList, Map<Id, Account> accOldMap){
+        for(Account newAccount: acclist){
+            Account oldAcc= accOldMap.get(newAccount.Id);
+            if(oldAcc!=null){
+                 newAccount.description='account previous phone number is '+ oldAcc.Phone;
+            }
+        }
+    }
+}
+/*Trigger.oldMap: A map of IDs to the old versions of the sObject records.
+Handler class içerisinde Trigger.oldMap kullanamayacağımız için
+Map<Id,Account> AccOldMap kullandık.
+Bu Map ID ye göre Account object inin update olmadan önceki kayıtlarını tutar.
+Key: ID
+Value: Lead object (prior value)
+Account oldAcc= AccOldMap.get(acc.Id);
+Bu kod ile AccOldMap içerisinden get() yardımı ile phone numarası değişecek kaydın Id sini oldAcc ye atadık. 
+newAccount.Old_Phone__c = oldAcc.Phone;
+ile de Old Phone field ına değişmeden önceki phone numarasını ekledik.
+
+*/
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//EXAMPLE9
+/*Whenever phone field updated on Account 
+	then description field should also get updated with name and old phone number on account.
+*/
+trigger AccountTrigger on Account(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  }
+    WHEN BEFORE_UPDATE{  
+    AccountTriggerHandler.oldPhoneRecord(Trigger.new, Trigger.oldMap);
+    }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+////////////////////////////////////
+public class AccountTriggerHandler{
+    public static void oldPhoneAdd(list<Account> accList, Map<Id, Account> accOldMap){
+        for(Account newAccount: accList){
+        	Account oldAcc= accOldMap.get(newAccount.Id);
+            if(oldAcc!= null && newAccount.Phone != oldAcc.Phone){
+                newAccount.Description = newAccount.name + oldAcc.Phone;
+            }
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+//EXAMPLE10
+	When the account’s Billing City is updated,
+	 assign the Billing City field of Account to the Mailing City field in the contacts of that account.
+(** Update olduktan sonra başka bir object te değişiklik yapacağımız için After Update de yazarız.)
+
+trigger AccountTrigger on Account(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  }
+    WHEN BEFORE_UPDATE{  
+
+    }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  }
+    WHEN AFTER_UPDATE {
+        AccountTriggerHandler.MailingCityUpdate(Trigger.new, Trigger.oldMap);
+    }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+///////////////////////////////
+public class AccountTriggerHandler{
+    Public static void MailingCityUpdate(List<Account> accList, Map<Id, Account> accOldMap){
+        Set<Id> accIdSet= new Set<Id>();
+        for(Account newAccount: accList){
+            account oldAccount=accOldMap.get(newAccount.Id);
+            if(newAccount.BillingCity!=oldAccount.BillingCity){
+                accIdSet.add(newAccount.Id);
+            }
+        }
+        List<Contact> contList=[SELECT Id, MailingCity, Account.BillingCity 
+                                FROM Contact 
+                                Where AccountId IN : accIdSet];
+        for(Contact cont: contlist){
+            cont.MailingCity = cont.Account.BillingCity;
+        }
+        Database.update(contList);
+    }
+}
+////////
+/*
+Set<Id> accIdset = new Set<Id>();
+
+forLoop ile oluşan her bir Account un Id sini SET içerisine koyduk.
+Çünkü;
+SET in içerisindeki elemanlar unique olmalı, yani aynı elemandan birden fazla olmamalı. 
+
+
+Query ile accIdset içerisindeki Account Id lerinin Contact larının Id, MailingCity, Account unun BillingCity sini contList adında oluşturduğumuz listenin içerisine koyduk.
+
+Sonra da forLoop içerisinde 
+
+cont.MailingCity = cont.Account.BillingCity;
+ile update edilen Account BillingCity değerini Contact ın MailingCity field ına atadık.
+*/
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+
+/*Example11
+	Create a ‘Number of contact’ field on the Account and 
+	develop a trigger that updates this field on the Account every time a new Contact is created.
+*/	
+///////////
+trigger ContactTrigger on Contact(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  }
+    WHEN BEFORE_UPDATE{  }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {
+        ContactTriggerHandler.NumberOfContact(Trigger.new);
+    }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+
+///////////////////////////
+public class ContactTriggerHandler {
+    Public static void NumberOfContact(List<Contact> cntList){
+        Set<Id> accIdSet= new Set<Id>();
+        for(Contact newContact:cntList){
+            if(newContact.AccountId !=null){
+                accIdset.add(newContact.AccountId);
+            }
+        }
+        if(accIdSet!=null || accIdSet.size()>0){
+            List<Account> accList=[SELECT Id, (SELECT Id FROM Contacts)FROM Account WHERE Id IN: accIdSet];
+            for(Account acc: accList){
+                acc.Description = 'Bu account a bağlı contact sayısı: '+  String.valueOf(acc.Contacts.size());
+            }
+            Database.update(accList);
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+Example12
+•	İf a new lead is created or updated and if ‘Industry’ field is null, give a warning.
+•	Prevent deleting record and give a warning if ‘Industry’ field is null. 
+
+trigger LeadTrigger on Lead(before insert, before update, before delete, after insert, after update, after delete, after undelete){
+    
+    if( Trigger.IsBefore && Trigger.isInsert){
+LeadTriggerHandler.IndustryCheck(Trigger.new);
+    }
+    if( Trigger.IsBefore && Trigger.isUpdate){
+LeadTriggerHandler.IndustryCheck(Trigger.new);
+    }
+    if( Trigger.IsBefore && Trigger.isDelete){ 
+LeadTriggerHandler.IndustryCheck(Trigger.old);
+/*
+Trigger.old  Kullandık. Çünkü, kayıtlı olan (save yapılmış, var olan) record un eski hali için işlem yapacağız.
+
+*/
+    }
+    if( Trigger.IsAfter && Trigger.isInsert){}
+    if( Trigger.IsAfter && Trigger.isUpdate){}
+    if( Trigger.IsAfter && Trigger.isDelete){}
+    if( Trigger.IsAfter && Trigger.isUndelete){}
+}
+/////////////
+public class LeadTriggerHandler {
+    public static void IndustryCheck(List<Lead> leadList){
+        List<Lead> myleadList= new List<Lead>();
+        for(Lead LeadRecord: leadList){
+            if(LeadRecord.Industry==null){
+               LeadRecord.Industry.addError('Warning!!!');
+            }
+        }
+    }
+}
+/*
+addError
+Hata mesajjı göstermek için kullanılır.
+leadOb.Industry.addError('Warning!!'); şeklinde addError yazarsak Industry field ının yanında uyarı metnini gösterir. Eğer;  field adını yazmazsak sayfanın üzerinde hatayı gösterir. *Bu trigger ile ındustry si olmayan kayıtın silinmemesi için Validation Rule oluşturmuş olduk.
+*/
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+Example13
+trigger LeadTrigger on Lead(before insert, before update, before delete, after insert, after update, after delete, after undelete)
+{
+    
+    if( Trigger.IsBefore && Trigger.isInsert){}
+    if( Trigger.IsBefore && Trigger.isUpdate){}
+    if( Trigger.IsBefore && Trigger.isDelete){}
+    if( Trigger.IsAfter && Trigger.isInsert){}
+    if( Trigger.IsAfter && Trigger.isUpdate){}
+    if( Trigger.IsAfter && Trigger.isDelete){}
+    if( Trigger.IsAfter && Trigger.isUndelete){
+        for(Lead leadObj: leadList){
+             leadObj.Recycled__c='Restored';
+	   }
+    }
+}
+///////////////////
+leadObj.Recycled__c='Restored';
+
+Bu kod çalışmaz system hata verir.
+ Çünkü after olan trigger lar sadece
+‘ Read Only’ dir.
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+Example14
+•	When a lead record is Restored from a recycle bin, type ’Restored’ in the console.
+///////////////
+
+trigger LeadTrigger on Lead (before insert, before update, before delete, after insert, after update, after delete, after undelete) {
+
+    if (Trigger.isBefore) {
+        if (Trigger.isInsert) {
+            // Handle before insert logic here
+        }
+        if (Trigger.isUpdate) {
+            // Handle before update logic here
+        }
+        if (Trigger.isDelete) {
+            // Handle before delete logic here
+        }
+    }
+    
+    if (Trigger.isAfter) {
+        if (Trigger.isInsert) {
+            // Handle after insert logic here
+        }
+        if (Trigger.isUpdate) {
+            // Handle after update logic here
+        }
+        if (Trigger.isDelete) {
+            // Handle after delete logic here
+        }
+        if (Trigger.isUndelete) {
+            for (Lead leadObj : Trigger.new) {
+                if (leadObj != null) {
+                    System.debug('Restored: ' + leadObj.LastName);
+                }
+            }
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+Example15
+
+	Create an error (Warning) trigger when a Lead is updated from ‘Open - Not Contacted’ status to ‘Closed - Converted’ or ‘Closed - Not Converted’ status. (Validation).
+////
+trigger LeadTrigger on Lead(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  }
+    WHEN BEFORE_UPDATE{
+    LeadTriggerHandler.statusCheck(Trigger.new, Trigger.oldMap);
+    }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+///////////////////
+
+public class LeadTriggerHandler {
+    public static void statusCheck(List<Lead> leadList, Map<Id, Lead> leadOldMap){
+        for(Lead newLead: leadList){
+            Lead oldLead= leadOldMap.get(newLead.Id);
+            if(oldLead.Status=='Open - Not Contacted' && (newLead.Status=='Closed – Converted' || newLead.Status=='Closed – Not Converted')){
+              newLead.Status.addError('Warning!!');
+            }
+        }
+    }
+}
+
+////
+Trigger.oldMap: A map of IDs to the old versions of the sObject records.
+
+Handler class içerisinde Trigger.oldMap kullanamayacağımız için
+Map<Id,Lead> leadOldMap
+Kullandık.
+Bu Map ID ye göre lead object inin update olmadan önceki kayıtlarını tutar.
+Key: ID
+Value: Lead object (prior value)
+
+
+Lead oldLead= leadOldMap.get(lead.id);
+
+Id ye göre Lead objectinin eski kayıtlarının olduğu map içerisinden 
+get() ile
+ Id sine göre lead kaydını  çağırdık ve 
+oldLead 
+variable ına atadık.
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+Example16
+•	While creating a lead, assign ‘Other’ if Lead Source is null.
+•	After creating Lead record. Create a Task.
+///////////////////////
+
+trigger LeadTrigger on Lead(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  
+		LeadTriggerHandler.newleadSourceToOther(Trigger.new);
+    }
+    WHEN BEFORE_UPDATE{  }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  
+   		LeadTriggerHandler.newTaskCreate(Trigger.new);
+    }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+//////
+
+public class LeadTriggerHandler {
+    public static void newleadSourceToOther(List<Lead> leadList){
+        for(Lead newLead : leadList){
+            if(String.isBlank(newLead.LeadSource)){
+                newLead.LeadSource= 'Other';
+            }
+        } 
+    }
+    
+    public static void newTaskCreate(List<Lead> leadList){
+        List<Task> taskList= new List<Task>();
+        for(Lead newLead: leadList){
+            Task newTask= new Task();
+            newTask.Subject='new Lead Created';
+            newTask.Status='Not Started';
+            newTask.WhoId=newLead.Id;
+            newTask.OwnerId= newLead.OwnerId;
+            
+            taskList.add(newTask);
+        }
+        Database.Insert(Tasklist);
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+Example17
+•	Populate Opportunity description as  ‘Test purpose Opportunity’ when user creates Opportunity.
+•	Whenever Opportunity is updated, show name of user who updates opportunity on description of Opportunity
+•	Prevent deleting of an Opportunity if Opportunity is ‘Closed Won’.
+•	When the Opportunity stage is updated to ‘’Negotiation/Review’’, develop a trigger that creates a task for the owner.
+///
+trigger OpportunityTrigger on Opportunity (before insert, 
+                                           before update, 
+                                           before delete, 
+                                           after insert, 
+                                           after update, 
+                                           after delete, 
+                                           after undelete) {
+                                               
+	SWITCH ON Trigger.operationType{
+        WHEN BEFORE_INSERT{
+        	OpportunityTriggerHandler.updateDescription(Trigger.new);
+        }
+        WHEN BEFORE_UPDATE{ 
+        	OpportunityTriggerHandler.updateDescription(Trigger.new);
+        }
+        WHEN BEFORE_DELETE{ 
+        	OpportunityTriggerHandler.preventDeleteClosedWonOpp(Trigger.new);
+        }
+        WHEN AFTER_INSERT { }
+        WHEN AFTER_UPDATE { 
+        	OpportunityTriggerHandler.createTaskNegotiation_Review(Trigger.new, Trigger.oldMAp);
+        }
+        WHEN AFTER_DELETE { }
+        WHEN AFTER_UNDELETE{}                
+	}
+}
+
+////
+public class OpportunityTriggerHandler {
+    public static void updateDescription(List<Opportunity> listOpp){
+        for(Opportunity newOpp: listOpp ){
+            newOpp.Description= 'Test purpose opportunity '+ System.userInfo.getFirstName()+ ' '+ System.userInfo.getLastName();
+        }
+    }
+    public static void preventDeleteClosedWonOpp(List<Opportunity> listOpp){
+        for(Opportunity newOpp: listOpp ){
+            if(newOpp.StageName== 'Closed Won'){
+                newOpp.stageName.addError('it cannot be deletet whene an opp having Stage ise Closed Won ');
+            }
+        }
+    }    
+    public static void createTaskNegotiation_Review(List<Opportunity> listOpp, Map<Id, Opportunity> oppOldMap){
+        List<Task> taskList= new List<Task>();
+        for(Opportunity newOpp: listOpp ){
+            if(newOpp.StageName== 'Negotiation/Review' && oppOldMap.get(newOpp.Id).StageName!='Negotiation/Review'){
+                Task newTask = new Task();
+                newTask.Subject='Opportunity stage is updated to Negotiation/Review';
+                newTask.Status='Not Started';
+                newTask.OwnerId=newOpp.OwnerId;
+                taskList.add(newTask);
+            }
+            Database.Insert(taskList);
+        }
+    } 
+}
+
+
+/*
+If(opp.StageName=='Negotiation/Review' && Trigger.oldMap.get(opp.Id).StageName!= 'Negotiation/Review'){}
+
+Eğer Stage in
+Yeni hali -> (opp.StageName) -> 'Negotiation/Review' ve(&&) 
+Eski hali -> (Trigger.oldMap.get(opp.Id).StageName) -> 'Negotiation/Review' değilse
+
+if() parentez içi true olacak ve {} içerisindeki kod çalışacak.
+
+Trigger.oldMap.get(opp.Id)
+Yazmak yerine
+
+İf (){} den önceki satırda
+Opportunity oldOpp = Trigger.oldMap.get(opp.Id);
+
+Yazarak Trigger.oldMap.get(opp.Id) değerini oldOpp ye atayarak oldOpp kullanabilirdik.
+
+    public static void createTaskNegotiation_Review(List<Opportunity> listOpp, Map<Id, Opportunity> oppOldMap){
+        List<Task> taskList= new List<Task>();
+        for(Opportunity newOpp: listOpp ){
+            Opportunity oldOpp = oppOldMap.get(newOpp.Id);
+            if(newOpp.StageName== 'Negotiation/Review' && oldOpp.StageName!='Negotiation/Review'){
+                Task newTask = new Task();
+                newTask.Subject='Opportunity stage is updated to Negotiation/Review';
+                newTask.Status='Not Started';
+                newTask.OwnerId=newOpp.OwnerId;
+                taskList.add(newTask);
+            }
+            Database.Insert(taskList);
+        }
+*/
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+/*Recursion (Best Practices):
+•	To avoid the recursion on a trigger, make sure your trigger is getting executed only one time.
+•	Avoid Recursion of a Trigger by calling static boolean variable from another class.
+Example:
+Generate a trigger that after creating a new lead, creates another lead (FirstName=’new Lead Created’).
+
+*/
+
+trigger LeadTrigger on Lead(before insert, 
+                                  before update, 
+                                  before delete, 
+                                  after insert, 
+                                  after update, 
+                                  after delete, 
+                                  after undelete){
+    SWITCH on Trigger.operationType {
+    WHEN BEFORE_INSERT{  
+		LeadTriggerHandler.newleadSourceToOther(Trigger.new);
+    }
+    WHEN BEFORE_UPDATE{  }
+    WHEN BEFORE_DELETE{  }
+    WHEN AFTER_INSERT {  
+   		LeadTriggerHandler.newTaskCreate(Trigger.new);
+        
+    }
+    WHEN AFTER_UPDATE {  }
+    WHEN AFTER_DELETE {  }
+    WHEN AFTER_UNDELETE{ }
+    }
+}
+
+/////////////
+public class LeadTriggerHandler {
+    Public static Boolean RecursionStop=true;
+    public static void newLeadCration(List<Lead> leadList){
+        List<lead> updatedLeadList= new List<Lead>();
+        if(RecursionStop){
+            RecursionStop=false;
+            for(Lead myLeads: UpdatedleadList){
+                Lead myLead= new Lead();
+                      myLead.FirstName='new Lead Created';
+                      myLead.LastName='myLead Last Name';
+                      myLead.Status='Open – Not Contacted';
+                      myLead.Company='New Company';
+                      myLead.Industry='Education';
+                UpdatedleadList.add(myLead);
+	   		}
+	   		Database.insert(UpdatedleadList);
+        }
+    }
+}
+
+
+/*
+Public static Boolean RecursionStop=true;
+
+İle Boolean RecursionStop variable ını true olarak atadık.
+
+If(RecursionStop){
+
+RecursionStop = false;
+
+}
+
+İle de RecursionStop true olduğu için if fonksiyonunun {} içerisindeki code çalışır sonra 
+RecursionStop = false;
+Satırına geldiğinde RecursionStop false olur ve if() içerisi false olduğu için {} içerisindeki code bir daha çalışmaz.
+Ve 
+Recursion engellenmiş olur.
+
+**RecursionStop = false; 
+İf(){} fonksiyonunda {} içerisinde olmalı.
+
+
+Public static Boolean RecursionStop=true;
+ 
+**Methodumuzun dışında olmak zorunda. Çünkü method her çağırıldığında true olarak methoda girmeli ki method içerisinde false a dönerek methodu bir kez çalıştırsın.
+
+
+*/
