@@ -1,0 +1,226 @@
+ HTML is at the core of every web page. It’s beginner-friendly and knowing the basics is useful for everyone who works in digital design, marketing, content and more. If you’re interested in front-end web development, this course is a great place to start! You don’t need any previous coding experience, and we have plenty of other courses for you to deepen your knowledge once you’re finished, including CSS and JavaScript.
+
+
+<html>
+  <head>
+    <title>Page Title</title>
+  </head>
+  <body>
+    <p>Enter payment option</p>
+    <input type="radio" id="r1" 
+    name="pay" value="cash">
+    <label for="r1">Cash</label>
+    <input type="radio" id="r2" 
+    name="pay" value="card">
+    <label for="r2">Card</label>  
+  </body>
+</html>
+
+
+where to put the information: name
+what information: value
+
+
+<form>
+  <input type="radio" id="r1" name="pay"
+  value="cash">
+  <label for="r1">Cash</label>
+  <input type="radio" id="r2" name="pay"
+  value="card">
+  <label for="r2">Card</label>
+  <input type="submit">
+</form>
+
+
+Where will the users’ choice of payment method be stored in the database?
+
+<form>
+  <input type="radio" id="r1" name="pay" 
+  value="cash">
+  <label for="r1">Cash</label>
+  <input type="radio" id="r2" name="pay" 
+  value="card">
+  <label for="r2">Card</label>
+  <input type=”submit”>
+</form>
+
+pay
+
+
+For the case of text inputs, you can use the value attribute to define a default value that will be submitted unless a different value is provided by the user.
+
+CODE PLAYGROUND: HTML
+<form>
+  <label for="t1">Email:</label>
+  <input type="text" id="t1"
+  name="email" 
+  value="example@domain.com"> 
+</form>
+
+
+
+<html>
+  <head>
+    <title>Drop-down Menu</title>
+  </head>
+  <body>
+    <form>
+      <label for="dropdown">
+      Choose an option:</label>
+      <select id="dropdown">
+        <option value="r">Red</option>
+        <option value="g">Green</option>
+        <option value="b">Blue</option>
+      </select>
+      <input type="submit">
+    </form>
+  </body>
+</html>
+
+
+
+The selected attribute creates a drop-down menu with a pre-selected option. The pre-selected option will be displayed first.
+
+<select name="color">
+ <option value="r">
+         Red</option>
+ <option value="g">
+         Green</option>
+ <option value="b" selected>
+         Blue</option>
+</select>
+HTML
+Which of the options has been pre-selected?
+
+
+Labels and drop-down menus are connected with for and id attributes, just like any other form element.
+
+CODE PLAYGROUND: HTML
+<form>
+ <label for="s1"> Vehicle type:</label>
+  <select name="vehicle" id="s1">
+   <option value="car">
+      Car</option>
+   <option value="bus">
+      Bus</option>
+  </select>
+</form>
+Click to run
+
+
+
+<form>
+<label for="d1">Currency:</label>
+<select name="currency" id="d1">
+<option>Euro</option>
+<option>US Dollar</option>
+</select>
+</form>
+
+
+Landing Page Project
+
+Let’s make it easier for your customers to buy your product, by adding a  special section with an order form.
+
+Tasks
+
+
+
+Add a drop-down menu using the <select> tag to offer your customers more than one <option>. Insert the drop-down menu inside the <form> container tag, right below the h2 heading
+
+Start adding a descriptive h2 heading to draw attention to the ordering section
+Add a well-structured <form> element with both text and email input type
+Add a "Submit" button to the form
+Example
+
+Make sure to add line breaks <br> to keep the page organized and easy to read.
+
+
+<html>
+    <head> 
+        <title> Product name </title>
+    </head>
+    <body>
+        <h1>New Awesome Product</h1>
+        <img src="https://blob.sololearn.com/courses/np.png">
+        <p>Introducing our <b>latest product</b>, designed to make your life <i>easier</i> and <u>more efficient</u>.</p>
+        <!-->Introducing our latest product, designed to make your life easier and more efficient. <--> 
+        <ul>
+            <li>Feature 1</li>
+            <li>Feature 2</li>
+            <li>Feature 3</li>
+        <ul>
+        <h2> Order now! </h2>
+         <label for="c1">Currency:</label>
+         <select name="currency" id="c1">
+         <option>Euro</option>
+         <option>US Dollar</option>
+         </select>
+        <form>
+            <Label for = 'n1'> Name </label>
+            <input type="text" id='name'> <br>
+            <Label for = 'n1'> Email </label>
+            <input type="email" id="eml"> <br>
+            <input type="submit">
+         </form>
+    </body>
+</html>
+
+
+Complete the code to create a form
+
+<form>
+<input type=
+id="c1">
+<label for="c1">Science</label>
+<input
+="checkbox" id="c2">
+<label for="c2">Tech</label>
+
+
+
+<form>
+<input type="radio"
+="r1">
+<label for=
+>Cash</label>
+<input type="radio" id="r2">
+<label
+="r2">Card</label>
+</form>
+
+What’s this code missing for the user’s choices to be sent to the database?
+
+<form>
+  <input type="radio" id="r1">
+  <label for="r1">Cash</label>
+  <input type="radio" id="r2">
+  <label for="r2">Card</label>
+</form>
+HTML
+Select all correct answers.
+
+What’s the content of this form?
+
+<form>
+  <label for="s1">Select currency:</label>
+  <select name="currency" id="s1">
+    <option>Euro</option>
+    <option>US Dollar</option>
+  </select>
+</form>
+
+
+<form>
+  <label 
+for
+="t1">
+  User Name</label>
+  <input type="text" 
+id
+="t1"
+  name="user">
+  <input 
+type
+="submit">
+</form>
