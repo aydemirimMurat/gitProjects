@@ -1,0 +1,140 @@
+Batch Class - Resetting the off days and outstanding off days of the employees
+The request is the calculation of the employees off days. 
+	I have to check 
+	employee whether currently working or not. in other words active user or not from epmloyee field.
+	
+	employee years experince effect total off day number, more less than two years having 15 off days, two to five years experience havin 20 off days and more than five years having 25 off days. 
+	
+	Total off days, used off days, avalaible off days etc. 
+	
+	if each years 1th  march, total off days is resetting to zero. 
+	
+	this should be done each day repeatedly. 
+	I have to use collection not to reach the governer limit, asynchronous trigger 
+	
+
+
+ Available_Off_Days__c, Currently_Working__c, Outstanding_Off_Days__c, Total_Off_Days__c, Used_Off_Days__c, Year_of_Experience__c
+ 
+ -----------------------------
+ public class BatchOffDays implements Database.Batchable<sObject> {
+    public Database.QueryLocator start(Database.BatchableContext bc){
+        return Database.getQueryLocator([SELECT Id, Available_Off_Days__c, Currently_Working__c, Outstanding_Off_Days__c, Total_Off_Days__c, Used_Off_Days__c, Year_of_Experience__c FROM Employee__c WHERE Currently_Working__c = TRUE]);
+    }
+    public void execute(Database.BatchableContext bc, List<Employee__c> listEmp){
+        
+    }
+    public void finish(Database.BatchableContext bc){
+        
+    }
+}
+
+------------------------
+
+(TODAY() - Contract_Start_Date__c) / 365
+
+-----------------------------
+
+
+public class BatchOffDays implements Database.Batchable<sObject> {
+    public Database.QueryLocator start(Database.BatchableContext bc){
+        return Database.getQueryLocator([SELECT Id, Available_Off_Days__c, Currently_Working__c, Outstanding_Off_Days__c, Total_Off_Days__c, Used_Off_Days__c, Year_of_Experience__c FROM Employee__c WHERE Currently_Working__c = TRUE]);
+    }
+    public void execute(Database.BatchableContext bc, List<Employee__c> listEmp){
+        try{
+            if(listEmp.size()>0) {
+                Date todaysDate = System.today();  // 2022-01-01 00:00:00
+                for(Employee__c emp:listEmp){
+                    if(todaysDate.month() == 1 && todaysDate.day() == 1){
+                        emp.Outstanding_Off_Days__c = emp.Available_Off_Days__c;
+                        emp.Total_Off_Days__c = emp.Year_of_Experience__c <= 2 ? 15 : (emp.Year_of_Experience__c <= 5 ? 20 : 25);
+                            emp.Used_Off_Days__c = 0;     
+                    }else if(todaysDate.month()== 3 && todaysDate.day() == 1){
+                        if(emp.Outstanding_Off_Days__c > 0){
+                            emp.Outstanding_Off_Days__c = 0;                     
+                        }
+                    }      
+                }
+                Database.update(listEmp);
+            }
+        }catch(Exception e) {
+            System.debug('Exception occured:::' + e.getMessage());
+        }
+    }
+    public void finish(Database.BatchableContext bc){
+        AsyncApexJob myJob = [SELECT Id, Status, NumberOfErrors FROM AsyncApexJob WHERE Id =:bc.getJobId()];
+        System.debug('myJob ::' + myJob.Status);
+    }
+}
+
+------------------------
+System.schedule
+CRON Expression:
+Name	Value
+Seconds	0–59
+Minutes	0-59
+Hours	0-23
+Day_of_month	1-31
+Month	1-12
+Day_of_week	1-7
+optional_year	null or 1970–2099
+? – No Value
+* – All Values
+L – Last
+
+
+--------------------------
+
+/***************************
+Project      : WQ - Hotel
+Created By   : Silverline Teams
+Created Date : 03/12/2022
+Description  : Batch Class - Resetting the off days and outstanding off days of the employees
+History      :
+*********ACRONYM OF AUTHORS*************
+AUTHOR                      ACRONYM
+Kenan Cetin                 KC
+****************************
+VERSION  AUTHOR         DATE            Description	  
+1.0      KC             03/12/2022      Initial version   
+****************************/
+public class BatchOffDays implements Database.Batchable<sObject>, Schedulable {
+    public Database.QueryLocator start(Database.BatchableContext bc){
+        return Database.getQueryLocator([SELECT Id, Available_Off_Days__c, Currently_Working__c, Outstanding_Off_Days__c, Total_Off_Days__c, Used_Off_Days__c, Year_of_Experience__c
+                                         FROM Employee__c WHERE Currently_Working__c = TRUE]);
+    }
+    public void execute(Database.BatchableContext bc, List<Employee__c> listEmp){
+        try{
+            if(listEmp.size()>0) {
+                Date todaysDate = System.today();  // 2022-01-01 00:00:00
+                for(Employee__c emp:listEmp){
+                    if(todaysDate.month() == 12 && todaysDate.day() == 3){
+                        emp.Outstanding_Off_Days__c = emp.Available_Off_Days__c;
+                        emp.Total_Off_Days__c = emp.Year_of_Experience__c <= 2 ? 15 : (emp.Year_of_Experience__c <= 5 ? 20 : 25);
+                            emp.Used_Off_Days__c = 0;     
+                    }else if(todaysDate.month()== 3 && todaysDate.day() == 1){
+                        if(emp.Outstanding_Off_Days__c > 0){
+                            emp.Outstanding_Off_Days__c = 0;                     
+                        }
+                    }      
+                }
+                Database.update(listEmp);
+            }
+        }catch(Exception e) {
+            System.debug('Exception occured: ' + e.getMessage());
+        }
+    }
+    public void finish(Database.BatchableContext bc){
+        AsyncApexJob myJob = [SELECT Id, Status, NumberOfErrors FROM AsyncApexJob WHERE Id =:bc.getJobId()];
+        System.debug('myJob: ' + myJob.Status);
+    }
+    public void execute(SchedulableContext sc) {
+        BatchOffDays myBatch = new BatchOffDays();
+        Database.executeBatch(myBatch);
+        /*   String cron = '0 0 3 1 1,3 * *';
+System.schedule('The Off Days Scheduled Job', cron, myBatch);
+System.schedule('The Off Days Scheduled Job', '0 0 3 1 1,3 ? *', new BatchOffDays());*/
+        
+    }
+    
+}
